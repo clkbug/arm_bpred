@@ -4,10 +4,12 @@ import sys
 import glob
 import re
 
+
 def get(f, x):
     m = re.search(x + "(\\d+)", f)
     assert m is not None
     return int(m.groups()[0])
+
 
 a = []
 for f in glob.glob(f"{sys.argv[1]}/*.tsv"):
@@ -25,4 +27,3 @@ a.sort()
 
 for x in a:
     print(*x, sep="\t")
-    
