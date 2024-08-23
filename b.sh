@@ -5,7 +5,7 @@ set -x
 
 for n in $(seq 0 8); do
   for n2 in $(seq 0 8); do
-    for i in $(seq 1 64); do
+    for i in $(seq 65 128); do
       j=$((2 ** 15 / i))
       python3 b.py ${i} ${j} ${n} ${n2} >/tmp/a.s
       gcc /tmp/a.s
