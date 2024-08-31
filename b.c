@@ -1,6 +1,7 @@
 #include <stdio.h>
+#include <stdint.h>
 
-void putnum(int c)
+void putnum(uint64_t c)
 {
-    printf("%d\n", c);
+    printf("%llu\n", c);
 }
