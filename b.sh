@@ -8,7 +8,7 @@ for n in $(seq 0 8); do
     for i in $(seq 65 128); do
       j=$((2 ** 15 / i))
       python3 b.py ${i} ${j} ${n} ${n2} >/tmp/a.s
-      gcc /tmp/a.s
+      gcc /tmp/a.s b.c
       perf stat -ddd -x'\t' -o perf.inner${i}.outer${j}.nop${n}.nop2${n2}.tsv ./a.out
     done
   done
