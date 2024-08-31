@@ -22,5 +22,6 @@ main:
     mov x0, x2
     bl putnum
 	ldp	x29, x30, [sp], 32
+    mov x0, 0
     ret
 	.size	main, .-main
