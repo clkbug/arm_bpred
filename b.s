@@ -5,7 +5,7 @@
 	.type	main, %function
 main:
     stp	x29, x30, [sp, -32]!
-    mov x2, 0 # debug counter
+    mov x2, 0
     mov x0, 0
     movk x0, ${outer}, LSL 16
     ${nop}
