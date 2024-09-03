@@ -1,22 +1,22 @@
-# started on Fri Aug 23 00:49:58 2024
+# started on Wed Sep  4 05:10:45 2024
 
-2622.66	msec	task-clock:u	2622658769	100.00	1.000	CPUs utilized
-0		context-switches:u	2622658769	100.00	0.000	/sec
-0		cpu-migrations:u	2622658769	100.00	0.000	/sec
-39		page-faults:u	2622658769	100.00	14.870	/sec
-4706770187		cycles:u	2038718215	77.00	1.795	GHz
-4623747976		instructions:u	2038672830	77.00	0.98	insn per cycle
+2668.90	msec	task-clock:u	2668903303	100.00	1.000	CPUs utilized
+0		context-switches:u	2668903303	100.00	0.000	/sec
+0		cpu-migrations:u	2668903303	100.00	0.000	/sec
+47		page-faults:u	2668903303	100.00	17.610	/sec
+4790018211		cycles:u	2072842155	77.00	1.795	GHz
+6770864513		instructions:u	2076823195	77.00	1.41	insn per cycle
 <not supported>		branches:u	0	100.00		
-3189		branch-misses:u	2038647436	77.00		
-49077		L1-dcache-loads:u	2038650966	77.00	18.713	K/sec
-2611		L1-dcache-load-misses:u	2038666546	77.00	5.32	of all L1-dcache accesses
+3324		branch-misses:u	2076906754	77.00		
+51187		L1-dcache-loads:u	2076914694	77.00	19.179	K/sec
+2766		L1-dcache-load-misses:u	2076928247	77.00	5.40	of all L1-dcache accesses
 <not supported>		LLC-loads:u	0	100.00		
 <not supported>		LLC-load-misses:u	0	100.00		
-4294040733		L1-icache-loads:u	2039258109	77.00	1.637	G/sec
-3324		L1-icache-load-misses:u	2043283327	77.00	0.00	of all L1-icache accesses
+2229393171		L1-icache-loads:u	2076921493	77.00	835.322	M/sec
+4068		L1-icache-load-misses:u	2076895248	77.00	0.00	of all L1-icache accesses
 <not supported>		dTLB-loads:u	0	100.00		
-76		dTLB-load-misses:u	1751394402	66.00		
+0		dTLB-load-misses:u	1776050527	66.00		
 <not supported>		iTLB-loads:u	0	100.00		
-51		iTLB-load-misses:u	1747378998	66.00		
+0		iTLB-load-misses:u	1775979660	66.00		
 <not supported>		L1-dcache-prefetches:u	0	100.00		
 <not supported>		L1-dcache-prefetch-misses:u	0	100.00		
