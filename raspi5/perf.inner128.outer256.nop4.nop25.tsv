@@ -1,22 +1,22 @@
-# started on Wed Sep  4 22:54:11 2024
+# started on Fri Sep  6 03:01:33 2024
 
-1819.98	msec	task-clock:u	1819983772	100.00	1.000	CPUs utilized
-0		context-switches:u	1819983772	100.00	0.000	/sec
-0		cpu-migrations:u	1819983772	100.00	0.000	/sec
-34		page-faults:u	1819983772	100.00	18.681	/sec
-4361991333		cycles:u	899854720	49.00	2.397	GHz
-6576129011		instructions:u	903847686	49.00	1.51	insn per cycle
-2164081479		branches:u	907857720	49.00	1.189	G/sec
-3786		branch-misses:u	911857406	50.00	0.00	of all branches
-71553		L1-dcache-loads:u	915854420	50.00	39.315	K/sec
-3339		L1-dcache-load-misses:u	919851811	50.00	4.67	of all L1-dcache accesses
-5466		LLC-loads:u	923838401	50.00	3.003	K/sec
-826		LLC-load-misses:u	788134659	43.00	15.11	of all LL-cache accesses
-4312160402		L1-icache-loads:u	784134829	43.00	2.369	G/sec
-1761		L1-icache-load-misses:u	780124775	42.00	0.00	of all L1-icache accesses
-6516		dTLB-loads:u	776129238	42.00	3.580	K/sec
-113		dTLB-load-misses:u	772129002	42.00	1.73	of all dTLB cache accesses
-4295226950		iTLB-loads:u	768146294	42.00	2.360	G/sec
-0		iTLB-load-misses:u	767996391	42.00		
+1820.07	msec	task-clock:u	1820066142	100.00	1.000	CPUs utilized
+0		context-switches:u	1820066142	100.00	0.000	/sec
+0		cpu-migrations:u	1820066142	100.00	0.000	/sec
+34		page-faults:u	1820066142	100.00	18.681	/sec
+4361808239		cycles:u	898044032	49.00	2.397	GHz
+6575843500		instructions:u	902043383	49.00	1.51	insn per cycle
+2164004678		branches:u	906044424	49.00	1.189	G/sec
+4551		branch-misses:u	910041440	50.00	0.00	of all branches
+75424		L1-dcache-loads:u	914052643	50.00	41.440	K/sec
+3223		L1-dcache-load-misses:u	918052272	50.00	4.27	of all L1-dcache accesses
+5815		LLC-loads:u	922054146	50.00	3.195	K/sec
+1313		LLC-load-misses:u	790029594	43.00	22.58	of all LL-cache accesses
+4312309206		L1-icache-loads:u	786022459	43.00	2.369	G/sec
+1829		L1-icache-load-misses:u	782021537	42.00	0.00	of all L1-icache accesses
+6802		dTLB-loads:u	778022481	42.00	3.737	K/sec
+110		dTLB-load-misses:u	774013962	42.00	1.62	of all dTLB cache accesses
+4295304744		iTLB-loads:u	770010738	42.00	2.360	G/sec
+0		iTLB-load-misses:u	767987773	42.00		
 <not supported>		L1-dcache-prefetches:u	0	100.00		
 <not supported>		L1-dcache-prefetch-misses:u	0	100.00		
