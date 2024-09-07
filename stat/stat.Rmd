@@ -1,0 +1,243 @@
+---
+title: "Raspi"
+output: html_document
+date: "2024-08-31"
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+```{r}
+library(tidyverse)
+library(magrittr)
+library(plotly)
+```
+
+## データの読み込み
+
+```{r}
+data_raspi4 <- read_tsv("../raspi4.tsv") %>% mutate(cpu = "A72")
+data_raspi4_br <- read_tsv("../raspi4.tsv") %>% mutate(cpu = "A72br")
+data_raspi5 <- read_tsv("../raspi5.tsv") %>% mutate(cpu = "A76")
+data <- union_all(data_raspi4, data_raspi5) %>% mutate(cpu = cpu %>% as_factor)
+```
+
+## 大雑把な確認
+
+### 命令数
+
+```{r}
+data %>%
+  filter(nop == 0 & nop2 == 0) %>%
+  ggplot(
+    mapping = aes(
+      x = inner,
+      y = instructions,
+      color = cpu,
+    )
+  ) +
+  theme_bw() +
+  scale_y_continuous(limits = c(0, NA)) +
+  geom_point() +
+  geom_line()
+data %>%
+  filter(nop == 0 & nop2 == 0) %>%
+  ggplot(
+    mapping = aes(
+      x = outer,
+      y = instructions,
+      color = cpu,
+    )
+  ) +
+  theme_bw() +
+  scale_y_continuous(limits = c(0, NA)) +
+  geom_point() +
+  geom_line()
+data %>%
+  filter(nop == 0 & nop2 == 0) %>%
+  ggplot(
+    mapping = aes(
+      x = inner,
+      y = inner * outer,
+      color = cpu,
+    )
+  ) +
+  theme_bw() +
+  scale_y_continuous(limits = c(0, NA)) +
+  geom_point() +
+  geom_line()
+```
+
+```{r}
+
+data %>%
+  filter(nop == 0 & nop2 == 0) %>%
+  mutate(inst = instructions - min(instructions)) %>%
+  ggplot(
+    mapping = aes(
+      x = outer %>% log2,
+      y = inst %>% log2,
+      color = cpu,
+    )
+  ) +
+  theme_bw() +
+  scale_y_continuous(limits = c(0, NA)) +
+  geom_point() +
+  geom_line()
+```
+
+```{r}
+data_raspi5 %>%
+  filter(nop == 0 & nop2 == 0) %>%
+  ggplot(
+    mapping = aes(
+      x = branches,
+      y = instructions,
+      color = outer,
+    )
+  ) +
+  theme_bw() +
+  geom_point() +
+  geom_line()
+data_raspi5 %>%
+  filter(nop == 0 & nop2 == 0) %>%
+  ggplot(
+    mapping = aes(
+      x = branches,
+      y = instructions / branches,
+      color = outer,
+    )
+  ) +
+  theme_bw() +
+  geom_point() +
+  geom_line()
+```
+
+
+
+```{r}
+data %>%
+  ggplot(
+    mapping = aes(
+      x = nop2,
+      y = instructions,
+      color = cpu,
+      group = interaction(inner, outer),
+    )
+  ) +
+  theme_bw() +
+  geom_point() +
+  geom_line() +
+  facet_wrap(~ cpu)
+```
+
+
+
+
+### A72
+
+```{r}
+for(x in 0:8) {
+  p <- data_raspi4 %>%
+    filter(nop == x & inner < 40) %>%
+    ggplot(
+      mapping = aes(
+        x = inner,
+        y = branch_misses %>% log10,
+        color = nop2 %>% as_factor()
+      )
+    ) +
+    theme_bw() +
+    geom_point() +
+    geom_line() +
+    labs(title = sprintf("%d", x))
+  plot(p)
+}
+```
+
+
+```{r}
+for(x in 0:8) {
+  p <- data_raspi4 %>%
+    filter(nop == x & inner < 40) %>%
+    ggplot(mapping = aes(
+      x = inner,
+      y = nop2,
+      fill = log10(branch_misses),
+    )) +
+    theme_bw() +
+    # geom_raster(hjust = 0, vjust = 0) +
+    geom_raster() +
+    labs(title = sprintf("nop1 = %d", x)) +
+    scale_x_continuous(breaks = 0:100 * 5, minor_breaks = 0:100) +
+    scale_y_continuous(limits = c(-1, 9), breaks = 0:10)
+  plot(p)
+  ggplotly(p)
+}
+```
+
+
+
+```{r}
+for(x in 0:8) {
+  p <- data_raspi4_br %>%
+    filter(nop == x & inner < 40) %>%
+    ggplot(mapping = aes(
+      x = inner,
+      y = nop2,
+      fill = log10(branch_misses),
+    )) +
+    theme_bw() +
+    # geom_raster(hjust = 0, vjust = 0) +
+    geom_raster() +
+    labs(title = sprintf("useless branch, nop1 = %d", x)) +
+    scale_x_continuous(breaks = 0:100 * 5, minor_breaks = 0:100) +
+    scale_y_continuous(limits = c(-1, 9), breaks = 0:10)
+  plot(p)
+  ggplotly(p)
+}
+```
+
+### A76
+
+```{r}
+for(x in 0:8) {
+  p <- data_raspi5 %>%
+    filter(nop == x) %>%
+    ggplot(
+      mapping = aes(
+        x = inner,
+        y = branch_misses %>% log10,
+        color = nop2 %>% as_factor()
+      )
+    ) +
+    theme_bw() +
+    geom_point() +
+    geom_line() +
+    labs(title = sprintf("%d", x))
+  plot(p)
+}
+```
+
+
+
+```{r}
+for(x in 0:8) {
+  p <- data_raspi5 %>%
+    filter(nop == x) %>%
+    ggplot(mapping = aes(
+      x = inner,
+      y = nop2,
+      fill = log10(branch_misses),
+    )) +
+    theme_bw() +
+    # geom_raster(hjust = 0, vjust = 0) +
+    geom_raster() +
+    labs(title = sprintf("nop1 = %d", x)) +
+    scale_x_continuous(breaks = 0:100 * 50, minor_breaks = 0:100 * 10) +
+    scale_y_continuous(limits = c(-1, 9), breaks = 0:10)
+  plot(p)
+  ggplotly(p)
+}
+```

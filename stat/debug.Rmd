@@ -1,0 +1,210 @@
+---
+title: "Raspi"
+output: html_document
+date: "2024-08-31"
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+```{r}
+library(tidyverse)
+library(magrittr)
+```
+
+## データの読み込み
+
+```{r}
+data_raspi4 <- read_tsv("../raspi4.tsv") %>% mutate(cpu = "A72")
+data_raspi5 <- read_tsv("../raspi5.tsv") %>% mutate(cpu = "A76")
+data <- union_all(data_raspi4, data_raspi5) %>% mutate(cpu = cpu %>% as_factor)
+```
+
+## 大雑把な確認
+
+### 命令数
+
+```{r}
+data %>%
+  filter(nop == 0 & nop2 == 0) %>%
+  ggplot(
+    mapping = aes(
+      x = inner,
+      y = instructions,
+      color = cpu,
+    )
+  ) +
+  theme_bw() +
+  scale_y_continuous(limits = c(0, NA)) +
+  geom_point() +
+  geom_line()
+data %>%
+  filter(nop == 0 & nop2 == 0) %>%
+  ggplot(
+    mapping = aes(
+      x = outer,
+      y = instructions,
+      color = cpu,
+    )
+  ) +
+  theme_bw() +
+  scale_y_continuous(limits = c(0, NA)) +
+  geom_point() +
+  geom_line()
+data %>%
+  filter(nop == 0 & nop2 == 0) %>%
+  ggplot(
+    mapping = aes(
+      x = inner,
+      y = inner * outer,
+      color = cpu,
+    )
+  ) +
+  theme_bw() +
+  scale_y_continuous(limits = c(0, NA)) +
+  geom_point() +
+  geom_line()
+```
+
+```{r}
+
+data %>%
+  filter(nop == 0 & nop2 == 0) %>%
+  mutate(inst = instructions - min(instructions)) %>%
+  ggplot(
+    mapping = aes(
+      x = outer %>% log2,
+      y = inst %>% log2,
+      color = cpu,
+    )
+  ) +
+  theme_bw() +
+  scale_y_continuous(limits = c(0, NA)) +
+  geom_point() +
+  geom_line()
+```
+
+```{r}
+data_raspi5 %>%
+  filter(nop == 0 & nop2 == 0) %>%
+  ggplot(
+    mapping = aes(
+      x = branches,
+      y = instructions,
+      color = outer,
+    )
+  ) +
+  theme_bw() +
+  geom_point() +
+  geom_line()
+data_raspi5 %>%
+  filter(nop == 0 & nop2 == 0) %>%
+  ggplot(
+    mapping = aes(
+      x = branches,
+      y = instructions / branches,
+      color = outer,
+    )
+  ) +
+  theme_bw() +
+  geom_point() +
+  geom_line()
+```
+
+
+
+```{r}
+data %>%
+  ggplot(
+    mapping = aes(
+      x = nop2,
+      y = instructions,
+      color = cpu,
+      group = interaction(inner, outer),
+    )
+  ) +
+  theme_bw() +
+  geom_point() +
+  geom_line() +
+  facet_wrap(~ cpu)
+```
+
+
+### raspi4
+
+```{r}
+data_raspi4 %>%
+  with(counter / (inner * outer)) %>% summary
+data_raspi5 %>%
+  with(counter / (inner * outer)) %>% summary
+```
+
+
+```{r}
+data %>%
+  filter(nop == 0 & nop2 == 0) %>%
+  ggplot(
+    mapping = aes(
+      x = outer %>% log2,
+      y = task_clock,
+      color = cpu,
+    )
+  ) +
+  theme_bw() +
+  geom_point() +
+  geom_line()
+```
+
+
+```{r}
+data %>%
+  filter(nop == 0 & nop2 == 0) %>%
+  ggplot(
+    mapping = aes(
+      x = inner,
+      y = outer,
+      color = cpu,
+    )
+  ) +
+  theme_bw() +
+  geom_point() +
+  geom_line()
+data %>%
+  filter(nop == 0 & nop2 == 0) %>%
+  ggplot(
+    mapping = aes(
+      x = outer,
+      y = instructions,
+      color = cpu,
+    )
+  ) +
+  theme_bw() +
+  geom_point() +
+  geom_line()
+data %>%
+  filter(nop == 0 & nop2 == 0) %>%
+  ggplot(
+    mapping = aes(
+      x = outer,
+      y = branch_misses / instructions,
+      color = cpu,
+    )
+  ) +
+  theme_bw() +
+  geom_point() +
+  geom_line()
+data %>%
+  filter(nop == 0 & nop2 == 0) %>%
+  ggplot(
+    mapping = aes(
+      x = log10(outer),
+      y = log10(instructions),
+      color = cpu,
+    )
+  ) +
+  theme_bw() +
+  geom_point() +
+  geom_line()
+```
+
