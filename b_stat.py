@@ -30,9 +30,11 @@ def branch_addr(filename):
 
 a = []
 for f in glob.glob(f"{sys.argv[1]}/*.tsv"):
-    asm = "asm/" + f.split("/")[1].replace("perf.",
-                                           "").replace(".tsv", ".objdump")
+    asm = f.replace("perf.", "").replace(".tsv", ".objdump")
     data = branch_addr(asm)
+    with open(f.replace("perf.", "").replace(".tsv", ".stdout")) as fp:
+        for l in fp:
+            data["counter"] = l.strip()
     with open(f) as fp:
         data["inner"] = get(f, "inner")
         data["outer"] = get(f, "outer")
