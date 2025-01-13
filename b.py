@@ -29,8 +29,7 @@ if "--use_br" in sys.argv:
     # s = "\tsub x4, x2, x3"
     s += f"\tcmp x2, x3\n"
     for i in range(nop2c):
-        s += f".temporal_branch{i}:\n"
-        s += f"\tb.ls .temporal_branch{a[i]}\n"
+        s += f".temporal_branch{i}:\tb.ls .temporal_branch{a[i]}\n"
     s += f".temporal_branch{nop2c}:"
 
     nop2 = s
