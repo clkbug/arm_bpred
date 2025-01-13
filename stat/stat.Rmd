@@ -70,7 +70,6 @@ data %>%
 ```
 
 ```{r}
-
 data %>%
   filter(nop == 0 & nop2 == 0) %>%
   mutate(inst = instructions - min(instructions)) %>%

@@ -78,3 +78,43 @@ union_all(data_raspi4 %>% mutate(insert = "nop"),
 ```
 
 ## Raspberry Pi 5
+
+### 分岐履歴の長さ
+
+```{r}
+data_raspi5 %>%
+  group_by(inner) %>%
+  summarise(branch_misses = sum(branch_misses)) %>%
+  ggplot(
+    mapping = aes(
+      x = inner,
+      y = log10(branch_misses),
+    )
+  ) +
+  theme_bw() +
+  geom_point() +
+  geom_line() +
+  labs(x = "内側のループの周回数", y = "log10（分岐予測ミス回数）") +
+  # scale_x_continuous(limits = c(0, 60), breaks = 0:20 * 5) +
+  scale_y_continuous(limits = c(5, 10))
+data_raspi5 %>%
+  group_by(inner) %>%
+  summarise(branch_misses = sum(branch_misses)) %>%
+  filter(between(inner, 350, 400)) %>%
+  ggplot(
+    mapping = aes(
+      x = inner,
+      y = log10(branch_misses),
+    )
+  ) +
+  theme_bw() +
+  geom_point() +
+  geom_line() +
+  labs(x = "内側のループの周回数", y = "log10（分岐予測ミス回数）") +
+  # scale_x_continuous(limits = c(0, 60), breaks = 0:20 * 5) +
+  scale_y_continuous(limits = c(5, 10))
+```
+
+### 分岐履歴の表現
+
+
