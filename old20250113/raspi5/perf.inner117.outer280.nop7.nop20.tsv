@@ -1,0 +1,22 @@
+# started on Thu Sep  5 00:11:05 2024
+
+926.62	msec	task-clock:u	926623052	100.00	1.000	CPUs utilized
+0		context-switches:u	926623052	100.00	0.000	/sec
+0		cpu-migrations:u	926623052	100.00	0.000	/sec
+34		page-faults:u	926623052	100.00	36.692	/sec
+2220072281		cycles:u	450647388	48.00	2.396	GHz
+6494552264		instructions:u	452195037	48.00	2.93	insn per cycle
+2164841790		branches:u	456195518	49.00	2.336	G/sec
+3447		branch-misses:u	460194664	49.00	0.00	of all branches
+71717		L1-dcache-loads:u	464193053	50.00	77.396	K/sec
+3382		L1-dcache-load-misses:u	468193774	50.00	4.72	of all L1-dcache accesses
+5455		LLC-loads:u	472193888	50.00	5.887	K/sec
+6		LLC-load-misses:u	408001238	44.00	0.11	of all LL-cache accesses
+2165750410		L1-icache-loads:u	406427184	43.00	2.337	G/sec
+1708		L1-icache-load-misses:u	402428127	43.00	0.00	of all L1-icache accesses
+6414		dTLB-loads:u	398429037	42.00	6.922	K/sec
+105		dTLB-load-misses:u	394429073	42.00	1.64	of all dTLB cache accesses
+2147362883		iTLB-loads:u	390428795	42.00	2.317	G/sec
+64		iTLB-load-misses:u	386428924	41.00	0.00	of all iTLB cache accesses
+<not supported>		L1-dcache-prefetches:u	0	100.00		
+<not supported>		L1-dcache-prefetch-misses:u	0	100.00		
