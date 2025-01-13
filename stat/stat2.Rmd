@@ -1,0 +1,80 @@
+---
+title: "Raspi"
+output: html_document
+date: "2024-08-31"
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+```{r}
+library(tidyverse)
+library(magrittr)
+library(plotly)
+```
+
+## データの読み込み
+
+```{r}
+data_raspi4 <- read_tsv("../raspi4.tsv") %>% mutate(cpu = "A72")
+data_raspi4_br <- read_tsv("../raspi4_br.tsv") %>% mutate(cpu = "A72br")
+data_raspi5 <- read_tsv("../raspi5.tsv") %>% mutate(cpu = "A76")
+data <- union_all(data_raspi4, data_raspi5) %>% mutate(cpu = cpu %>% as_factor)
+```
+
+## Raspberry Pi 4
+
+### 分岐履歴の長さ
+
+```{r}
+data_raspi4 %>%
+  group_by(inner) %>%
+  summarise(branch_misses = sum(branch_misses)) %>%
+  filter(inner <= 60) %>%
+  ggplot(
+    mapping = aes(
+      x = inner,
+      y = log10(branch_misses),
+    )
+  ) +
+  theme_bw() +
+  geom_point() +
+  geom_line() +
+  labs(x = "内側のループの周回数", y = "log10（分岐予測ミス回数）") +
+  scale_x_continuous(limits = c(0, 60), breaks = 0:20 * 5) +
+  scale_y_continuous(limits = c(5, 11)) +
+  geom_vline(xintercept = 32, color = "red", linetype = "dashed")
+```
+
+32を境に分岐予測ミスが増加している。
+従って、32+1=33回分の分岐履歴を保持している。
+
+### 分岐履歴はどういう表現か？
+
+
+```{r}
+union_all(data_raspi4 %>% mutate(insert = "nop"),
+          data_raspi4_br %>% mutate(insert = "untaken br")) %>%
+  mutate(insert = as_factor(insert)) %>%
+  group_by(inner, insert) %>%
+  summarise(branch_misses = sum(branch_misses)) %>%
+  filter(inner <= 60) %>%
+  ggplot(mapping = aes(
+    x = inner,
+    y = log10(branch_misses),
+    color = insert,
+    shape = insert,
+  )) +
+  theme_bw() +
+  geom_point() +
+  geom_line() +
+  labs(x = "内側のループの周回数", y = "log10（分岐予測ミス回数）") +
+  scale_x_continuous(limits = c(0, 60), breaks = 0:20 * 5) +
+  scale_y_continuous(limits = c(5, 11)) +
+  geom_vline(xintercept = 32,
+             color = "red",
+             linetype = "dashed")
+```
+
+## Raspberry Pi 5
