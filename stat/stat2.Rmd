@@ -20,6 +20,7 @@ library(plotly)
 data_raspi4 <- read_tsv("../raspi4.tsv") %>% mutate(cpu = "A72")
 data_raspi4_br <- read_tsv("../raspi4_br.tsv") %>% mutate(cpu = "A72br")
 data_raspi5 <- read_tsv("../raspi5.tsv") %>% mutate(cpu = "A76")
+data_raspi5_br <- read_tsv("../raspi5.tsv") %>% mutate(cpu = "A76br")
 data <- union_all(data_raspi4, data_raspi5) %>% mutate(cpu = cpu %>% as_factor)
 ```
 
@@ -28,7 +29,7 @@ data <- union_all(data_raspi4, data_raspi5) %>% mutate(cpu = cpu %>% as_factor)
 ### 分岐履歴の長さ
 
 ```{r}
-data_raspi4 %>%
+p <- data_raspi4 %>%
   group_by(inner) %>%
   summarise(branch_misses = sum(branch_misses)) %>%
   filter(inner <= 60) %>%
@@ -45,6 +46,8 @@ data_raspi4 %>%
   scale_x_continuous(limits = c(0, 60), breaks = 0:20 * 5) +
   scale_y_continuous(limits = c(5, 11)) +
   geom_vline(xintercept = 32, color = "red", linetype = "dashed")
+plot(p)
+ggsave("ghr_length_raspi4.png", width = 1920, height = 1080, units = "px")
 ```
 
 32を境に分岐予測ミスが増加している。
@@ -54,7 +57,7 @@ data_raspi4 %>%
 
 
 ```{r}
-union_all(data_raspi4 %>% mutate(insert = "nop"),
+p <- union_all(data_raspi4 %>% mutate(insert = "nop"),
           data_raspi4_br %>% mutate(insert = "untaken br")) %>%
   mutate(insert = as_factor(insert)) %>%
   group_by(inner, insert) %>%
@@ -75,6 +78,8 @@ union_all(data_raspi4 %>% mutate(insert = "nop"),
   geom_vline(xintercept = 32,
              color = "red",
              linetype = "dashed")
+plot(p)
+ggsave("ghr_reps_raspi4.png", width = 1920, height = 1080, units = "px")
 ```
 
 ## Raspberry Pi 5
@@ -82,7 +87,7 @@ union_all(data_raspi4 %>% mutate(insert = "nop"),
 ### 分岐履歴の長さ
 
 ```{r}
-data_raspi5 %>%
+p <- data_raspi5 %>%
   group_by(inner) %>%
   summarise(branch_misses = sum(branch_misses)) %>%
   ggplot(
@@ -97,7 +102,9 @@ data_raspi5 %>%
   labs(x = "内側のループの周回数", y = "log10（分岐予測ミス回数）") +
   # scale_x_continuous(limits = c(0, 60), breaks = 0:20 * 5) +
   scale_y_continuous(limits = c(5, 10))
-data_raspi5 %>%
+plot(p)
+ggsave("ghr_length_raspi5.png", width = 1920, height = 1080, units = "px")
+p <- data_raspi5 %>%
   group_by(inner) %>%
   summarise(branch_misses = sum(branch_misses)) %>%
   filter(between(inner, 350, 400)) %>%
@@ -113,8 +120,81 @@ data_raspi5 %>%
   labs(x = "内側のループの周回数", y = "log10（分岐予測ミス回数）") +
   # scale_x_continuous(limits = c(0, 60), breaks = 0:20 * 5) +
   scale_y_continuous(limits = c(5, 10))
+plot(p)
+ggsave("ghr_length_raspi5_detail.png", width = 1920, height = 1080, units = "px")
 ```
 
 ### 分岐履歴の表現
 
+
+```{r}
+p <- union_all(data_raspi5 %>% mutate(insert = "nop"),
+          data_raspi5_br %>% mutate(insert = "untaken br")) %>%
+  mutate(insert = as_factor(insert)) %>%
+  group_by(inner, insert) %>%
+  summarise(branch_misses = sum(branch_misses)) %>%
+  # filter(inner <= 60) %>%
+  ggplot(mapping = aes(
+    x = inner,
+    y = log10(branch_misses),
+    color = insert,
+    shape = insert,
+  )) +
+  theme_bw() +
+  geom_point() +
+  geom_line()
+  labs(x = "内側のループの周回数", y = "log10（分岐予測ミス回数）") +
+  # scale_x_continuous(limits = c(0, 60), breaks = 0:20 * 5) +
+  # scale_y_continuous(limits = c(5, 11)) +
+  # geom_vline(xintercept = 32,
+  #            color = "red",
+  #            linetype = "dashed")
+plot(p)
+ggsave("ghr_reps_raspi5.png", width = 1920, height = 1080, units = "px")
+p <- union_all(data_raspi5 %>% mutate(insert = "nop"),
+          data_raspi5_br %>% mutate(insert = "untaken br")) %>%
+  mutate(insert = as_factor(insert)) %>%
+  group_by(inner, insert) %>%
+  summarise(branch_misses = sum(branch_misses)) %>%
+  filter(between(inner, 350, 400)) %>%
+  ggplot(mapping = aes(
+    x = inner,
+    y = log10(branch_misses),
+    color = insert,
+    shape = insert,
+  )) +
+  theme_bw() +
+  geom_point() +
+  geom_line() +
+  labs(x = "内側のループの周回数", y = "log10（分岐予測ミス回数）")
+  # scale_x_continuous(limits = c(0, 60), breaks = 0:20 * 5) +
+  # scale_y_continuous(limits = c(5, 11)) +
+plot(p)
+ggsave("ghr_reps_raspi5_detail.png", width = 1920, height = 1080, units = "px")
+```
+
+
+## お試し
+
+### 3D
+
+```{r}
+fig <- plot_ly(
+  data_raspi4 %>% filter(inner <= 40),
+  x = ~ br1,
+  y = ~ br2,
+  z = ~ inner,
+  color = ~ log10(branch_misses)
+) %>% add_markers()
+fig
+fig <- plot_ly(
+  data_raspi5,
+  x = ~ br1,
+  y = ~ br2,
+  z = ~ inner,
+  color = ~ log10(branch_misses)
+) %>% add_markers()
+fig
+
+```
 
