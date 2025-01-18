@@ -173,6 +173,91 @@ plot(p)
 ggsave("ghr_reps_raspi5_detail.png", width = 1920, height = 1080, units = "px")
 ```
 
+## NOP命令の数と分岐予測ミス回数
+
+### RasPi4
+
+```{r}
+for(n2 in 0:8) {
+  p <- data_raspi4 %>%
+    filter(nop2 == n2 & inner <= 40) %>%
+    ggplot(mapping = aes(
+      x = inner,
+      y = nop,
+      colour = log10(branch_misses),
+      fill = log10(branch_misses)
+    )) +
+    theme_bw() +
+    geom_tile() +
+    labs(
+      x = "内側のループの周回数",
+      y = "ループの前に挿入されたNOPの数",
+      title = sprintf("内側のループの直後に挿入されたNOPの数 %d", n2)
+    ) +
+    scale_y_continuous(breaks = 0:8) +
+    scale_x_continuous(breaks = 0:40 * 5, minor_breaks = 0:40)
+  plot(p)
+  ggsave(
+    sprintf("nop_outer_%d_raspi4.png", n2),
+    width = 1920,
+    height = 1080,
+    units = "px"
+  )
+}
+```
+
+### Raspi5
+
+```{r}
+for(n2 in 0:8) {
+  p <- data_raspi5 %>%
+    filter(nop2 == n2) %>%
+    ggplot(mapping = aes(
+      x = inner,
+      y = nop,
+      colour = log10(branch_misses),
+      fill = log10(branch_misses)
+    )) +
+    theme_bw() +
+    geom_tile() +
+    labs(
+      x = "内側のループの周回数",
+      y = "ループの前に挿入されたNOPの数",
+      title = sprintf("内側のループの直後に挿入されたNOPの数 %d", n2)
+    ) +
+    scale_y_continuous(breaks = 0:8) +
+    scale_x_continuous(breaks = 0:30 * 50, minor_breaks = 0:30 * 10)
+  plot(p)
+  ggsave(
+    sprintf("nop_outer_%d_raspi5.png", n2),
+    width = 1920,
+    height = 1080,
+    units = "px"
+  )
+}
+```
+
+
+```{r}
+# 失敗
+# for (outer_br in (0:8 * 4 + 1916)) {
+#   p <- data_raspi4 %>%
+#     filter(br2 == outer_br & inner <= 40) %>%
+#     ggplot(mapping = aes(
+#       x = inner,
+#       y = br1,
+#       colour = log10(branch_misses),
+#       fill = log10(branch_misses)
+#     )) +
+#     theme_bw() +
+#     geom_tile() +
+#     labs(x = "内側のループの周回数", y = "内側のループの分岐命令のPC", title = sprintf("外側のループの分岐命令のPC：0x%x", outer_br)) +
+#     scale_y_continuous(breaks = 1908 + 0:8 * 4) +
+#     scale_x_continuous(breaks = 0:40 * 5, minor_breaks = 0:40)
+#   plot(p)
+# }
+```
+
 
 ## お試し
 
